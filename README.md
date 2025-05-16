@@ -1,7 +1,7 @@
 # 5G NR Radar
 > Integrated Sensing and Communication Physical layer (PHY) model of 5G NR.
 
-This repository is associated with our paper submission "5G NR-based radar sensing for airborne targets".
+This repository is associated with our paper submission "Detecting Airborne Objects with 5G NR Radars".
 The repository is currently empty and will be populated with code upon acceptance of the paper. Please check back later for updates.
 ## Installation
 Downloading or cloning the repository is all that's required—no further installation steps needed.
