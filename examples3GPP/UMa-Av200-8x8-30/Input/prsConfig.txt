@@ -1,0 +1,3 @@
+Param	Val
+CombSize	2
+NumPRSSymbols	2

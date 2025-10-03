@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+title: "Detecting Airborne Objects with 5G NR Radars"
+message: "If you use this work, please cite it as below."
+authors:
+  - family-names: "Blandino"
+    given-names: "Steve"
+  - family-names: "Golmie"
+    given-names: "Nada"
+  - family-names: "Sahoo"
+    given-names: "Anirudha"
+  - family-names: "Nguyen"
+    given-names: "Thao"
+  - family-names: "Ropitault"
+    given-names: "Tanguy"
+  - family-names: "Griffith"
+    given-names: "David"
+  - family-names: "Sonny"
+    given-names: "Amala"
+date-released: 2025-10-05
+doi: "10.48550/arXiv.2505.24763"
+url: "https://arxiv.org/abs/2505.24763"
+conference:
+  name: "IEEE Military Communications Conference (MILCOM)"
+  year: 2025
+type: conference-paper

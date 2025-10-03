@@ -1,0 +1,7 @@
+Param	Val
+channelScenario	UMaAV
+systemFc	6e9
+antennaNumH	8
+antennaNumV	8
+carrierSubcarrierSpacing	60
+carrierNSizeGrid	135
