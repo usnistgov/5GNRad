@@ -1,64 +1,70 @@
-%% 5GNR Radar (5NRad)
-% This script simulates a radar system based on 5G New Radio (NR) using
-% Positioning Reference Signals (PRS). It performs the following:
+%%  Run PRS-based radar simulations across multiple 3GPP scenarios
+%   MAIN executes the end-to-end 5G NR PRS radar simulation
+%   pipeline for a list of scenario folders and exports results for each
+%   scenario. The script loads scenario-specific configuration files, runs
+%   the simulation (optionally using parallel workers), and saves outputs to
+%   disk.
 %
-%   - Loads a predefined scenario configuration
-%   - Generates and transmits PRS OFDM waveforms
-%   - Simulates monostatic sensing through a CDL channel model
-%   - Processes the received signal to compute range-Doppler maps
-%   - Estimates target position and velocity over multiple time instances
-%   - Saves results to /Output/error.csv within the scenario folder
+%   Workflow:
+%     1) SETUP initializes required paths/toolboxes and project settings.
+%     2) CONFIGSCENARIO loads:
+%        - simConfig: simulation/system parameters (carrier, bandwidth, etc.)
+%        - stConfig : ground-truth target states
+%        - prsConfig: PRS configuration
+%        - geometry : TX/RX/TRP geometry for the scenario
+%        - sensConfig: sensing / processing configuration
+%        - backgroundChannel: background/environment channel model
+%        - targetChannel    : target channel model
+%     3) RUN5GNRAD executes the PRS radar processing chain and returns:
+%        - results, detStats, detectionOutput
+%     4) EXPORTRESULTS writes scenario results to disk.
+%
+%   Configuration parameters (edit in the script):
+%     scenarios       - String array of scenario folder paths.
+%     desiredWorkers  - Number of parallel workers requested by RUN5GNRAD.
+%     parallelMode    - "on"/"off" toggle for parallel execution.
 %
 %
-% Example:
-%   Run the script from the project root directory with the following:
-%       scenarioNameStr = 'examples/UMi-Av25';
-%
-%   Output:
-%       Results table written to:
-%           ./examples/UMi-Av25/Output/error.csv
-
-%   2025 NIST/CTL Steve Blandino
+%   2025-2026 NIST/CTL Steve Blandino
 %
 %   This file is available under the terms of the NIST License.
 
+scenarios = [
+    "examples/uma_trp1_3gpp"
+    "examples/uma_trp9_3gpp_08lambda"
+    "examples/uma_trp13_hybrid"
+    "examples/uma_trp20_3gpp"    
+    "examples/uma_trp1_fulldigital_rx_singletarget"    
+    ];
 
 
-% scenarioNameStrVector = {'examples3GPP/UMa-Av200-8x8-120',...
-%     'examples3GPP/UMa-Av200-8x8-30', ...
-%     'examples3GPP/UMa-Av200-8x8-30-24RB', 'examples3GPP/UMa-Av200-8x8-30-51RB',...
-%     'examples3GPP/UMa-Av200-8x8-30-133RB','examples3GPP/UMa-Av200-8x8-60', ...
-%     'examples3GPP/UMa-Av200-8x8-120', 'examples3GPP/UMa-Av200-8x8-128ss', ...
-%     'examples3GPP/UMa-Av200-8x8-192ss'};%, 'examples/UMa-Av200-8x4', 'examples/UMa-Av200-8x8','examples/UMa-Av200-16x8','examples/UMa-Av200-16x16','examples/UMa-Av200-24x24'};
-scenarioNameStrVector = {'examples3GPP/UMa-Av200-8x8-30'};
+parallelMode   = "on";
+desiredWorkers = 10;        % choose based on RAM
+
 %% Set path
-rootFolderPath = pwd;
-fprintf('--------5G NR Radar --------\n');
-fprintf('Current root folder:\n\t%s\n',rootFolderPath);
-[path,folderName] = fileparts(rootFolderPath);
-addpath(genpath(fullfile(rootFolderPath,'src')));
+setup();
 
-for i = 1:length(scenarioNameStrVector)
-    scenarioNameStr = scenarioNameStrVector{i};
-    fprintf('Use customized scenario: %s.\n',scenarioNameStr);
+for i = 1:numel(scenarios)
+    scenarioPath = scenarios(i);
+    fprintf("[%d/%d] Scenario: %s\n", i, numel(scenarios), scenarioPath);
 
-    % %% Run
-    [simConfig, stConfig, prsConfig, geometry, sensConfig,backgroundChannel,targetChannel] = configScenario(scenarioNameStr);
-    [results, detStats] = run5GNRad(simConfig, stConfig, prsConfig, geometry, sensConfig,backgroundChannel,targetChannel);
+    try
+        %% Load configs
+        [simConfig, stConfig, prsConfig, geometry, ...
+            sensConfig,backgroundChannel,targetChannel] = ...
+            nrRadar.cfg.configureScenario(scenarioPath);
 
-    %% Store Results
-    resultsTab = struct2table(results);    
-    detStatsTab = struct2table(detStats);
+        %% Run
+        [results, detStats, detectionOutput] = ...
+            nrRadar.run(simConfig, stConfig, prsConfig, geometry, ...
+            sensConfig,backgroundChannel,targetChannel,desiredWorkers, 'Parallel', parallelMode);
 
-    outputPath = fullfile(scenarioNameStr, 'Output');
-
-    if ~isfolder(outputPath)
-        mkdir(outputPath);
-    else
-        rmdir(outputPath, 's');
-        mkdir(outputPath);
+        %% Store Results
+        nrRadar.io.exportResults(scenarioPath, results,detStats,detectionOutput)
+    catch ME
+        fprintf(2, "Simulation Failed");
+        fprintf(2, "    %s\n\n", ME.getReport('extended','hyperlinks','off'));
     end
-    writetable(resultsTab, fullfile(outputPath, 'error.csv'))
-    writetable(detStatsTab, fullfile(outputPath, 'detStats.csv'))
-
 end
+
+fprintf('Simulation Complete\n');

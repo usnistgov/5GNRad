@@ -1,0 +1,10 @@
+Param	Val
+channelScenario	UMaAV
+carrierSubcarrierSpacing	30
+carrierNSizeGrid	273
+nStDrop	1
+systemNF	5
+customAntennaPattern	true
+trpYawDeg	30
+txPower	52
+nMaxDrop	50

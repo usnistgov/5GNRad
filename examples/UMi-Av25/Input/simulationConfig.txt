@@ -1,2 +1,0 @@
-Param	Val
-channelScenario	UMiAV

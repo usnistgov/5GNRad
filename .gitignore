@@ -1,0 +1,7 @@
+# Ignore specific data and workspace files
+*.csv
+*.json
+*.mat
+*.asv
+*.txt
+experiments/*

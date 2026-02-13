@@ -1,0 +1,8 @@
+Param	Val
+carrierSubcarrierSpacing	30
+carrierNSizeGrid	273
+nStDrop	5
+systemNF	5
+maxRangeInterest	400
+trpYawDeg	270
+nMaxDrop	50

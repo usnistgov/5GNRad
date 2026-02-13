@@ -1,2 +1,0 @@
-Param	Val
-CombSize	4

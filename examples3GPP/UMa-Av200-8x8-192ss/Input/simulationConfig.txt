@@ -1,5 +1,0 @@
-Param	Val
-channelScenario	UMaAV
-systemFc	4e9
-antennaNumH	8
-antennaNumV	8
