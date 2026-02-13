@@ -106,8 +106,8 @@ Each scenario under `examples/<scenarioName>/Input/`  includes:
 - `txAntennaModel.json`, `rxAntennaModel.json` — array geometry + beamforming/combining configuration
 - `backgroundChannel.json` *(optional)* — environment/clutter MPCs (uploaded-channel mode)
 - `targetChannel.json` *(optional)* — target MPCs (uploaded-channel mode)
-- `bsConfiguration.txt` *(if applicable)* — TRP/BS configuration
-- `targetConfiguration.txt` *(if applicable)* — target truth states (position/velocity timeline)
+- `bsConfiguration.txt`  — TRP/BS configuration
+- `targetConfiguration.txt`  — target truth states (position/velocity timeline)
 
 
 ### Operating mode selection
