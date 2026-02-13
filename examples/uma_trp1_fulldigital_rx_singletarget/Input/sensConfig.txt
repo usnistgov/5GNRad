@@ -1,0 +1,13 @@
+dopplerFftLen	256
+window	blackmanharris
+windowLen	256
+cfarGrdCellRange	22
+cfarGrdCellVelocity	8
+cfarTrnCellRange	24
+cfarTrnCellVelocity	10
+cfarThreshold	19.37
+rdaThreshold	10
+nmsRadius	[4 2 2 2]
+nmsMaxPeaks	200
+dbscanMinMaxRatio	10
+doaEstimationMethod	beamspaceFFT
